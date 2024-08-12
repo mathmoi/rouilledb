@@ -183,7 +183,7 @@ impl File for MemoryFile {
     /// use rouilledb::common::RandomBlob;
     /// use rouilledb::fs::{File, MemoryFile};
     ///
-    /// let blob = RandomBlob::new_default();
+    /// let blob : RandomBlob = RandomBlob::default();
     /// let mut file = MemoryFile::new();
     /// file.create().expect("create should not fail");
     /// file.write(0, blob.data()).expect("write should not fail");
@@ -276,7 +276,7 @@ mod tests {
     /// Writing a block of data to the file succeeds.
     #[test]
     fn write_an_non_zero_blob_succeed() {
-        let blob = RandomBlob::new_default();
+        let blob = RandomBlob::default();
 
         let mut file = MemoryFile::new();
         file.create().expect("create should not fail");
@@ -289,7 +289,7 @@ mod tests {
     /// Trying to write when the file is not opened fails.
     #[test]
     fn write_file_not_opened_fails() {
-        let blob = RandomBlob::new_default();
+        let blob = RandomBlob::default();
 
         let mut file = MemoryFile::new();
 
@@ -314,7 +314,7 @@ mod tests {
     /// Reading the content of the whole file succeeds.
     #[test]
     fn read_whole_file_data_is_correctly_read() {
-        let content = RandomBlob::new(Some(128));
+        let content = RandomBlob::new(128);
         let mut file = MemoryFile::new_with_data(content.data());
         let mut buffer = vec![0u8; 128];
 
@@ -331,7 +331,7 @@ mod tests {
     fn read_part_of_file_data_read_correctly() {
         let read_offset: usize = 32;
         let read_len: usize = 64;
-        let content = RandomBlob::new(Some(128));
+        let content = RandomBlob::new(128);
         let mut file = MemoryFile::new_with_data(content.data());
         let mut buffer = vec![0u8; read_len];
 
@@ -348,7 +348,7 @@ mod tests {
     fn read_past_the_end_of_the_file_fails() {
         let read_offset: usize = 1024;
         let read_len: usize = 32;
-        let content = RandomBlob::new(Some(128));
+        let content = RandomBlob::new(128);
         let mut file = MemoryFile::new_with_data(content.data());
         let mut buffer = vec![0u8; read_len];
 
@@ -364,7 +364,7 @@ mod tests {
     #[test]
     fn size_returns_the_correct_size() {
         let content_size: usize = 128;
-        let content = RandomBlob::new(Some(content_size));
+        let content = RandomBlob::new(content_size);
         let mut file = MemoryFile::new_with_data(content.data());
         file.open().expect("open should not fail");
 
