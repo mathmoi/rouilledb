@@ -22,10 +22,10 @@ impl MemoryFile {
     }
 
     /// Create a new [MemoryFile] with an specified initial content.
-    pub fn new_with_data(data: &[u8]) -> Self {
+    pub fn new_with_data(data: Vec<u8>) -> Self {
         MemoryFile {
             is_opened: false,
-            data: data.to_vec(),
+            data,
         }
     }
 }
@@ -143,6 +143,7 @@ impl File for MemoryFile {
             return Err(FileError::FileNotOpened(String::from("MemoryFile")));
         }
 
+        let data = data.as_ref();
         let end_offset: usize = offset + data.len();
         if self.data.len() < end_offset {
             self.data.resize(end_offset, 0);
@@ -315,7 +316,7 @@ mod tests {
     #[test]
     fn read_whole_file_data_is_correctly_read() {
         let content = RandomBlob::new(128);
-        let mut file = MemoryFile::new_with_data(content.data());
+        let mut file = MemoryFile::new_with_data(content.data().clone());
         let mut buffer = vec![0u8; 128];
 
         file.open().expect("open should not fail");
@@ -323,7 +324,7 @@ mod tests {
         let result = file.read(0, &mut buffer);
 
         assert!(result.is_ok());
-        assert_eq!(buffer, content.data());
+        assert_eq!(&buffer, content.data());
     }
 
     /// Reading a part of the file, the data is read correctly
@@ -332,7 +333,7 @@ mod tests {
         let read_offset: usize = 32;
         let read_len: usize = 64;
         let content = RandomBlob::new(128);
-        let mut file = MemoryFile::new_with_data(content.data());
+        let mut file = MemoryFile::new_with_data(content.data().clone());
         let mut buffer = vec![0u8; read_len];
 
         file.open().expect("open should not fail");
@@ -349,7 +350,7 @@ mod tests {
         let read_offset: usize = 1024;
         let read_len: usize = 32;
         let content = RandomBlob::new(128);
-        let mut file = MemoryFile::new_with_data(content.data());
+        let mut file = MemoryFile::new_with_data(content.data().clone());
         let mut buffer = vec![0u8; read_len];
 
         file.open().expect("open should not fail");
@@ -365,7 +366,7 @@ mod tests {
     fn size_returns_the_correct_size() {
         let content_size: usize = 128;
         let content = RandomBlob::new(content_size);
-        let mut file = MemoryFile::new_with_data(content.data());
+        let mut file = MemoryFile::new_with_data(content.data().clone());
         file.open().expect("open should not fail");
 
         let result = file.size();

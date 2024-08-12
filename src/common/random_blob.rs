@@ -18,8 +18,8 @@ impl RandomBlob {
         RandomBlob { data }
     }
 
-    /// Returns a reference to the [RandomBlob] data.
-    pub fn data(&self) -> &[u8] {
+    /// Returns a reference to the internal data.
+    pub fn data(&self) -> &Vec<u8> {
         &self.data
     }
 
