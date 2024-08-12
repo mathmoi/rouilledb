@@ -175,29 +175,32 @@ impl File for MemoryFile {
         Ok(())
     }
 
-    // Flush all changes to the disk so it will not be lost in case of a crash or power failure.
-    //
-    // # Example
-    //
-    // ```
-    // let blob = RandomBlob::new_default();
-    // let mut file = MemoryFile::new();
-    // file.create().expect("create should not fail");
-    // file.write(0, blob.data()).expect("write should not fail");
-    //
-    // let result = file.sync();
-    //
-    // assert!(result.is_ok());
-    // ```
+    /// Flush all changes to the disk so it will not be lost in case of a crash or power failure.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use rouilledb::common::RandomBlob;
+    /// use rouilledb::fs::{File, MemoryFile};
+    ///
+    /// let blob = RandomBlob::new_default();
+    /// let mut file = MemoryFile::new();
+    /// file.create().expect("create should not fail");
+    /// file.write(0, blob.data()).expect("write should not fail");
+    ///
+    /// let result = file.sync();
+    ///
+    /// assert!(result.is_ok());
+    /// ```
     fn sync(self) -> Result<(), FileError> {
         Ok(())
     }
 
-    // Get the size of the file.
-    //
-    // # Errors
-    //
-    // This method will return an error if the file is not opened.
+    /// Get the size of the file.
+    ///
+    /// # Errors
+    ///
+    /// This method will return an error if the file is not opened.
     fn size(self) -> Result<usize, FileError> {
         if !self.is_opened {
             return Err(FileError::FileNotOpened(String::from("MemoryFile")));
@@ -209,7 +212,7 @@ impl File for MemoryFile {
 
 #[cfg(test)]
 mod tests {
-    use crate::common::random_blob::RandomBlob;
+    use crate::common::RandomBlob;
 
     use super::*;
 
@@ -357,7 +360,7 @@ mod tests {
         assert!(matches!(result, Err(FileError::EndOfFileRead { .. })));
     }
 
-    // Size returns the correct size
+    /// Size returns the correct size
     #[test]
     fn size_returns_the_correct_size() {
         let content_size: usize = 128;
@@ -370,7 +373,7 @@ mod tests {
         assert!(matches!(result, Ok(value) if value == content_size));
     }
 
-    // Size returns an error if the file is not opened.
+    /// Size returns an error if the file is not opened.
     #[test]
     fn size_when_file_not_opened_fails() {
         let file = MemoryFile::new();

@@ -1,1 +1,3 @@
-pub mod random_blob;
+mod random_blob;
+
+pub use random_blob::RandomBlob;
